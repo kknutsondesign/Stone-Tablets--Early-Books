@@ -1,0 +1,42 @@
+[
+  {
+    "ingredientPattern": "R,S",
+    "enabled": true,
+    "ingredients": {
+      "R": {
+        "type": "item",
+        "code": "game:stone-*",
+        "name": "rock"
+      },
+      "S": {
+        "type": "item",
+        "code": "game:stick"
+      }
+    },
+    "width": 1,
+    "height": 2,
+    "output": {
+      "type": "item",
+      "code": "stylus-{rock}",
+      "quantity": 1
+    }
+  },
+  {
+    "ingredientPattern": "RR,RR,RR",
+    "enabled": true,
+    "ingredients": {
+      "R": {
+        "type": "item",
+        "code": "game:stone-*",
+        "name": "rock"
+      }
+    },
+    "width": 2,
+    "height": 3,
+    "output": {
+      "type": "item",
+      "code": "tablet-{rock}",
+      "quantity": 1
+    }
+  }
+]

@@ -1,0 +1,68 @@
+{
+	"editor": {
+		"allAngles": true,
+		"entityTextureMode": true
+	},
+	"textureWidth": 16,
+	"textureHeight": 16,
+	"textureSizes": {
+		"plainoak": [8,8],
+		"rockType": [16,16]
+	},
+	"textures": {
+		"plainoak": "textures/plainoak",
+		"rockType": "textures/granite1"
+	},
+	"elements": [
+		{
+			"name": "Anchor",
+			"stepParentName": "Head",
+			"from": [ 0.0, 3.4, -0.5 ], 
+			"to": [ 0.0, 3.4, -0.5 ], 
+			"uv": [ 4.5, 0.5 ],
+			"rotationOrigin": [ 0.0, 3.0, -1.0 ],
+			"rotationY": -11.0,
+			"rotationZ": -33.0,
+			"faces": {
+				"north": { "texture": "#plainoak", "uv": [ 4.5, 1.0, 5.0, 1.5 ], "enabled": false },
+				"east": { "texture": "#plainoak", "uv": [ 5.0, 1.0, 5.5, 1.5 ], "enabled": false },
+				"south": { "texture": "#plainoak", "uv": [ 5.5, 1.0, 6.0, 1.5 ], "enabled": false },
+				"west": { "texture": "#plainoak", "uv": [ 6.0, 1.0, 6.5, 1.5 ], "enabled": false },
+				"up": { "texture": "#plainoak", "uv": [ 4.5, 0.5, 5.0, 1.0 ], "enabled": false },
+				"down": { "texture": "#plainoak", "uv": [ 5.0, 0.5, 5.5, 1.0 ], "enabled": false }
+			},
+			"children": [
+				{
+					"name": "StylusHandle",
+					"from": [ 0.0, -0.4, -0.4 ], 
+					"to": [ 5.0, 0.4, 0.4 ], 
+					"autoUnwrap": false,
+					"uv": [ 0.5, 0.25 ],
+					"faces": {
+						"north": { "texture": "#plainoak", "uv": [ 1.25, 3.5, 6.25, 4.25 ] },
+						"east": { "texture": "#plainoak", "uv": [ 5.75, 1.0, 6.5, 1.75 ] },
+						"south": { "texture": "#plainoak", "uv": [ 0.75, 2.0, 5.75, 2.75 ] },
+						"west": { "texture": "#plainoak", "uv": [ 0.0, 2.0, 0.75, 2.75 ] },
+						"up": { "texture": "#plainoak", "uv": [ 2.0, 3.5, 7.0, 4.25 ] },
+						"down": { "texture": "#plainoak", "uv": [ 1.25, 3.0, 6.25, 3.75 ] }
+					}
+				},
+				{
+					"name": "StylusTip",
+					"from": [ 0.0, -0.2, -0.2 ], 
+					"to": [ 0.8, 0.2, 0.2 ], 
+					"uv": [ 0.5, 1.5 ],
+					"rotationOrigin": [ 0.0, 0.0, 0.0 ],
+					"rotationY": 180.0,
+					"faces": {
+						"north": { "texture": "#rockType", "uv": [ 0.5, 2.0, 1.0, 2.5 ] },
+						"east": { "texture": "#rockType", "uv": [ 1.0, 2.0, 1.5, 2.5 ] },
+						"south": { "texture": "#rockType", "uv": [ 1.5, 2.0, 2.0, 2.5 ] },
+						"west": { "texture": "#rockType", "uv": [ 2.0, 2.0, 2.5, 2.5 ] },
+						"up": { "texture": "#rockType", "uv": [ 0.5, 1.5, 1.0, 2.0 ] },
+						"down": { "texture": "#rockType", "uv": [ 1.0, 1.5, 1.5, 2.0 ] }
+					}
+				}
+			]
+		}
+	]}

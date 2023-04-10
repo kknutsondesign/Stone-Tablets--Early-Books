@@ -1,0 +1,120 @@
+{
+  "code": "stylus",
+  "class": "ItemWearable",
+  "storageFlags": 385,
+  "variantgroups": [
+    {
+      "code": "rock",
+      "loadFromProperties": "block/rock"
+    }
+  ],
+  "attributes": {
+    "writingTool": true,
+    "scribingTool": true,
+    "wearableAttachment": true,
+    "clothescategory": "neck",
+    "warmth": 0
+  },
+  "shape": { "base": "stylus" },
+  "textures": {
+    "seraph": { "base": "game:block/transparent" },
+    "rockType": { "base": "game:block/stone/rock/{rock}1" },
+    "plainoak": { "base": "game:block/wood/plainoak" }
+  },
+  "creativeinventory": {
+    "general": [ "*" ],
+    "items": [ "*" ],
+    "tools": [ "*" ]
+  },
+  "renderAlphaTest": 0.25,
+  "fpHandTransform": {
+    "translation": {
+      "x": 0,
+      "y": -1.2,
+      "z": 0.66
+    },
+    "rotation": {
+      "x": 155,
+      "y": -39,
+      "z": 116
+    },
+    "origin": {
+      "x": 0.4,
+      "y": 1.7,
+      "z": 0.35
+    },
+    "scale": 2.74
+  },
+  "tpHandTransform": {
+    "translation": {
+      "x": -0.7,
+      "y": -2.1,
+      "z": -0.45
+    },
+    "rotation": {
+      "x": -21,
+      "y": -180,
+      "z": 25
+    },
+    "origin": {
+      "x": 0.5,
+      "y": 1.4,
+      "z": 0.5
+    },
+    "scale": 0.71
+  },
+  "tpOffHandTransform": {
+    "translation": {
+      "x": -0.6,
+      "y": -2.1,
+      "z": -0.45
+    },
+    "rotation": {
+      "x": -21,
+      "y": -180,
+      "z": 25
+    },
+    "origin": {
+      "x": 0.5,
+      "y": 1.4,
+      "z": 0.5
+    },
+    "scale": 0.71
+  },
+  "guiTransform": {
+    "translation": {
+      "x": 2,
+      "y": -5,
+      "z": 0
+    },
+    "rotation": {
+      "x": 7,
+      "y": 29,
+      "z": 101
+    },
+    "origin": {
+      "x": 0.4,
+      "y": 1.7,
+      "z": 0.35
+    },
+    "scale": 4.15
+  },
+  "groundTransform": {
+    "translation": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "rotation": {
+      "x": 0,
+      "y": 0,
+      "z": 33
+    },
+    "origin": {
+      "x": 0.4,
+      "y": 1.7,
+      "z": 0.35
+    },
+    "scale": 5.32
+  }
+}

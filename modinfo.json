@@ -1,0 +1,18 @@
+{
+  "type": "code",
+  "name": "Stone Tablets: Early Books",
+  "modid": "tablet",
+  "version": "0.0.2",
+  "iconpath": "modicon.png",
+
+  "description": "Early game access to the new writing system",
+  "authors": [ "Soggylithe" ],
+
+  "dependencies": {
+    "game": "1.18.0-pre.3"
+  },
+
+  "Side": "Universal",
+  "RequiredOnClient": true,
+  "RequiredOnServer": true
+}
