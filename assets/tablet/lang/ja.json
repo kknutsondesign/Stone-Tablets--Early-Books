@@ -1,0 +1,11 @@
+{
+	// Japanese localization file for 'Stone Tablets: Early Books'.
+	// Mod Version: v0.0.2
+	// Translated By: Macoto Hino
+	// Machine translation using PCOT and DeepL.
+
+  "item-stylus-*": "尖筆",
+  "itemdesc-stylus-*": "耳に引っ掛ける粗末な筆記用具",
+  "item-tablet-*": "石板",
+  "itemdesc-tablet-*": "石で作られた粗末な筆記用具"
+}
