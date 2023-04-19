@@ -108,14 +108,5 @@ namespace Soggylithe_Tablet
             if (!offhand.Empty && offhand.Itemstack.Collectible.Attributes.IsTrue("writingTool"))
                 offhand.TryFlipWith(hat);
         }
-
-        public override void Dispose()
-        {
-            _capi.World.Player.InventoryManager.GetHotbarInventory().SlotModified -= CheckHotbar;
-            _capi.Event.AfterActiveSlotChanged -= CheckForWritable;
-            _registered = false;
-
-            base.Dispose();
-        }
     }
 }
