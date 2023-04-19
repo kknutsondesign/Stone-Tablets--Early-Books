@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -32,55 +32,66 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
+    <Reference Include="System"/>
+
+    <Reference Include="System.Core"/>
+    <Reference Include="System.Xml.Linq"/>
+    <Reference Include="System.Data.DataSetExtensions"/>
+
+
+    <Reference Include="Microsoft.CSharp"/>
+
+    <Reference Include="System.Data"/>
+
+    <Reference Include="System.Net.Http"/>
+
+    <Reference Include="System.Xml"/>
+
     <Reference Include="VintagestoryAPI">
       <HintPath>M:\VintagestoryVersions\Vintagestory-1.18.0r7-tablet\VintagestoryAPI.dll</HintPath>
       <Private>False</Private>
     </Reference>
+
     <Reference Include="VSSurvivalMod">
       <HintPath>M:\VintagestoryVersions\Vintagestory-1.18.0r7-tablet\Mods\VSSurvivalMod.dll</HintPath>
       <Private>False</Private>
     </Reference>
+
     <Reference Include="VSEssentials">
       <HintPath>M:\VintagestoryVersions\Vintagestory-1.18.0r7-tablet\Mods\VSEssentials.dll</HintPath>
       <Private>False</Private>
     </Reference>
+
     <Reference Include="VSCreativeMod">
       <HintPath>M:\VintagestoryVersions\Vintagestory-1.18.0r7-tablet\Mods\VSCreativeMod.dll</HintPath>
       <Private>False</Private>
     </Reference>
+
     <Reference Include="Newtonsoft.Json">
       <HintPath>M:\VintagestoryVersions\Vintagestory-1.18.0r7-tablet\Lib\Newtonsoft.Json.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    
   </ItemGroup>
   <ItemGroup>
-    <Content Include="assets\tablet\textures\granite1.png" />
-    <Content Include="assets\tablet\textures\plainoak.png" />
-    <Content Include="modinfo.json" />
-  </ItemGroup>
-  <ItemGroup />
-  <ItemGroup>
-    <Compile Include="src\TabletCore.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="assets\tablet\itemtypes\stylus.json" />
-    <None Include="assets\tablet\itemtypes\tablet.json" />
-    <None Include="assets\tablet\lang\en.json" />
-    <None Include="assets\tablet\recipes\gridCrafting.json" />
-    <None Include="assets\tablet\shapes\stylus.json" />
-    <None Include="assets\tablet\shapes\tablet.json" />
+    <Folder Include="assets\" /><Content Include="assets\tablet\itemtypes\stylus.json" />
+<Content Include="assets\tablet\itemtypes\tablet.json" />
+<Content Include="assets\tablet\lang\en.json" />
+<Content Include="assets\tablet\lang\ja.json" />
+<Content Include="assets\tablet\recipes\gridCrafting.json" />
+<Content Include="assets\tablet\shapes\stylus.json" />
+<Content Include="assets\tablet\shapes\tablet.json" />
+<Content Include="assets\tablet\textures\granite1.png" />
+<Content Include="assets\tablet\textures\plainoak.png" />
+
+    <Folder Include="src\" />
+    <Content Include="modinfo.json" /><Compile Include="src\TabletCore.cs" />
+
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>
+
     </PostBuildEvent>
   </PropertyGroup>
 </Project>
