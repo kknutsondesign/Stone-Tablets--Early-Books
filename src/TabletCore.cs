@@ -14,9 +14,8 @@ namespace Soggylithe_Tablet
 {
     public class ModSystemTablets: ModSystem
     {
-        private bool _registered;
-        private ICoreClientAPI _capi;
-
+        private ICoreServerAPI _sapi;
+        private Dictionary<string, long> _scrollStart = new Dictionary<string, long>();
         public override void Start(ICoreAPI api)
         {
             base.Start(api);
@@ -24,89 +23,179 @@ namespace Soggylithe_Tablet
             api.Logger.Notification("Loaded tablets.");
         }
 
-        public override void StartClientSide(ICoreClientAPI api)
+        public override void StartServerSide(ICoreServerAPI api)
         {
-            base.StartClientSide(api);
-            _capi = api; 
-            _capi.Event.AfterActiveSlotChanged += CheckForWritable;
-            //TODO check for interacting with bookshelf - TryTake hook, inventory hook, event hook?
+            base.StartServerSide(api);
+            _sapi = api;
+            _sapi.Event.BeforeActiveSlotChanged += Scrolling;
+            _sapi.Event.RegisterGameTickListener(OnTick, 50);
+            _sapi.Event.PlayerJoin += OnJoin;
+            //_sapi.Event.PlayerLeave += OnLeave;
         }
 
-        public void CheckHotbar(int slot)
+        private void OnTick(float ms)
+        {
+
+            for(int i = _scrollStart.Count-1; i >= 0;i--)
+            {
+                string key = _scrollStart.ElementAt(i).Key;
+                long time = _scrollStart.ElementAt(i).Value;
+
+                long current = _sapi.World.ElapsedMilliseconds;
+                if(current - time > 100)
+                {
+                    _scrollStart.Remove(key);
+
+                    IPlayer player = _sapi.World.PlayerByUid(key);
+
+                    CheckHotbar(player, player.InventoryManager.ActiveHotbarSlotNumber);
+                }
+            }
+        }
+        public EnumHandling Scrolling(IPlayer player, ActiveSlotChangeEventArgs args)
+        {
+            if (!_scrollStart.ContainsKey(player.PlayerUID))
+            {
+                _scrollStart.Add(player.PlayerUID, _sapi.World.ElapsedMilliseconds);
+                return EnumHandling.Handled;
+            }
+            _scrollStart[player.PlayerUID] = _sapi.World.ElapsedMilliseconds;
+
+            return EnumHandling.Handled;
+        }
+
+        public void OnJoin(IPlayer player)
+        {
+            player.InventoryManager.GetHotbarInventory().SlotModified += delegate (int slot)
+            {
+                CheckHotbar(player, slot);
+            };
+        }
+
+        //private Dictionary<string, Action<int>> _delegates = new Dictionary<string, Action<int>>();
+
+        //public void OnJoin(IServerPlayer player)
+        //{
+        //    _delegates.Add(player.PlayerUID, delegate (int slot)
+        //    {
+        //        CheckHotbar(player, slot);
+        //    });
+
+        //    player.InventoryManager.GetHotbarInventory().SlotModified += _delegates[player.PlayerUID];
+        //    };
+        //}
+
+        //public void OnLeave(IServerPlayer player)
+        //{
+        //    if (_delegates.ContainsKey(player.PlayerUID))
+        //    {
+        //        player.InventoryManager.GetHotbarInventory().SlotModified -= _delegates[player.PlayerUID];
+        //        _delegates.Remove(player.PlayerUID);
+        //    }
+        //    else
+        //    {
+        //        _sapi.Logger.Error("Stone Tablets: Player leaving server had no UID registered in callback dictionary. Contact @soggylithe");
+        //    }
+        //}
+
+
+
+
+        public void CheckHotbar(IPlayer player, int slot)
         {
             //Active slot was modified
-            if (slot == _capi.World.Player.InventoryManager.ActiveHotbarSlotNumber)
+            if (slot == player.InventoryManager.ActiveHotbarSlotNumber)
             {
-                ItemSlot active = _capi.World.Player.InventoryManager.ActiveHotbarSlot;
-                ItemSlot offhand = _capi.World.Player.Entity.LeftHandItemSlot;
+                ItemSlot active = player.InventoryManager.ActiveHotbarSlot;
+                ItemSlot offhand = player.Entity.LeftHandItemSlot;
 
-                if(active.Empty && offhand.Empty) { return; }
+                bool activeBook = !active.Empty && active.Itemstack.Collectible.Attributes != null ? active.Itemstack.Collectible.Attributes.IsTrue("editable") : false;
+                bool offhandTool = !offhand.Empty && offhand.Itemstack.Collectible.Attributes != null ? offhand.Itemstack.Collectible.Attributes.IsTrue("writingTool") : false;
 
-                if(active.Empty && !offhand.Empty)
+                if (active.Empty && offhand.Empty) { return; }
+
+                if (active.Empty && !offhand.Empty)
                 {
-                    if (offhand.Itemstack.Collectible.Attributes.IsTrue("writingTool"))
-                        PutAwayWritingTool();
+                    if (offhandTool)
+                        PutAwayWritingTool(player);
                     return;
                 }
 
-                if(!active.Empty && offhand.Empty)
+                if (!active.Empty && offhand.Empty)
                 {
-                    if(active.Itemstack.Collectible.Attributes.IsTrue("editable"))
-                        TakeOutWritingTool();
+                    if (activeBook)
+                        TakeOutWritingTool(player);
                     return;
                 }
 
+                if(!active.Empty && !offhand.Empty)
+                {
+                    if(!activeBook && offhandTool)
+                        PutAwayWritingTool(player);
+                }
             }
         }
 
-        public void CheckForWritable(ActiveSlotChangeEventArgs args)
-        {
-            if (!_registered) { _capi.World.Player.InventoryManager.GetHotbarInventory().SlotModified += CheckHotbar; _registered = true; }
+        //public void ServerCheckForWritable(IPlayer player, ActiveSlotChangeEventArgs args)
+        //{
+        //    ItemStack fromItem = player.InventoryManager.GetHotbarItemstack(args.FromSlot);
+        //    ItemStack toItem = player.InventoryManager.GetHotbarItemstack(args.ToSlot);
 
-            ItemStack fromItem = _capi.World.Player.InventoryManager.GetHotbarItemstack(args.FromSlot);
-            ItemStack toItem = _capi.World.Player.InventoryManager.GetHotbarItemstack(args.ToSlot);
+        //    bool wasEditing = false;
+        //    bool willBeEditing = false;
 
-            bool wasEditing = fromItem != null ? fromItem.Collectible.Attributes.IsTrue("editable") : false;
-            bool willBeEditing = toItem != null ? toItem.Collectible.Attributes.IsTrue("editable") : false;
+        //    if (fromItem != null && fromItem.Collectible.Attributes != null)
+        //        wasEditing = fromItem.Collectible.Attributes.IsTrue("editable");
 
-            if (wasEditing && willBeEditing)
-                return;
+        //    if (toItem != null && toItem.Collectible.Attributes != null)
+        //        willBeEditing = toItem.Collectible.Attributes.IsTrue("editable");
 
-            if (willBeEditing)
-            {
-                TakeOutWritingTool(); 
-            }
+        //    if (wasEditing && willBeEditing)
+        //        return;
 
-            if(wasEditing)
-            {
-                PutAwayWritingTool();
-            }
-        }
+        //    if (willBeEditing)
+        //    {
+        //        TakeOutWritingTool(player);
+        //    }
 
-        private void TakeOutWritingTool()
-        {
-            ItemSlot hat;
-            ItemSlot offhand;
-            offhand = _capi.World.Player.Entity.LeftHandItemSlot;
-            hat = _capi.World.Player.InventoryManager.GetOwnInventory(GlobalConstants.characterInvClassName)[(int)EnumCharacterDressType.Neck];
+        //    if (wasEditing)
+        //    {
+        //        PutAwayWritingTool(player);
+        //    }
 
+        //    return;
+        //}
 
-            if (!offhand.Empty && offhand.Itemstack.Collectible.Attributes.IsTrue("writingTool"))
-                return;
-
-            if (!hat.Empty && hat.Itemstack.Collectible.Attributes.IsTrue("writingTool"))
-                offhand.TryFlipWith(hat);
-        }
-
-        private void PutAwayWritingTool()
+        private void TakeOutWritingTool(IPlayer player)
         {
             ItemSlot hat;
             ItemSlot offhand;
-            offhand = _capi.World.Player.Entity.LeftHandItemSlot;
-            hat = _capi.World.Player.InventoryManager.GetOwnInventory(GlobalConstants.characterInvClassName)[(int)EnumCharacterDressType.Neck];
+            offhand = player.Entity.LeftHandItemSlot;
+            hat = player.InventoryManager.GetOwnInventory(GlobalConstants.characterInvClassName)[(int)EnumCharacterDressType.Neck];
 
-            if (!offhand.Empty && offhand.Itemstack.Collectible.Attributes.IsTrue("writingTool"))
-                offhand.TryFlipWith(hat);
+
+            if (!offhand.Empty && 
+                 offhand.Itemstack.Collectible.Attributes != null && 
+                 offhand.Itemstack.Collectible.Attributes.IsTrue("writingTool"))
+                return;
+
+            if (!hat.Empty &&
+                hat.Itemstack.Collectible.Attributes != null &&
+                hat.Itemstack.Collectible.Attributes.IsTrue("writingTool"))
+                if (offhand.TryFlipWith(hat)) { offhand.MarkDirty(); hat.MarkDirty(); }
+        }
+
+        private void PutAwayWritingTool(IPlayer player)
+        {
+            ItemSlot hat;
+            ItemSlot offhand;
+            offhand = player.Entity.LeftHandItemSlot;
+            hat = player.InventoryManager.GetOwnInventory(GlobalConstants.characterInvClassName)[(int)EnumCharacterDressType.Neck];
+            
+            if (!offhand.Empty &&
+                offhand.Itemstack.Collectible.Attributes != null &&
+                offhand.Itemstack.Collectible.Attributes.IsTrue("writingTool"))
+                if (offhand.TryFlipWith(hat)) { offhand.MarkDirty(); hat.MarkDirty(); }
         }
     }
 }
