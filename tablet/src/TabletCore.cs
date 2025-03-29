@@ -35,21 +35,23 @@ namespace Soggylithe_Tablet
 
         private void OnTick(float ms)
         {
+            long current = _sapi.World.ElapsedMilliseconds;
 
-            for(int i = _scrollStart.Count-1; i >= 0;i--)
-            {
-                string key = _scrollStart.ElementAt(i).Key;
-                long time = _scrollStart.ElementAt(i).Value;
-
-                long current = _sapi.World.ElapsedMilliseconds;
-                if(current - time > 100)
+            List<string> keys = new List<string>();
+            foreach(var kv in  _scrollStart) { 
+                if(current - kv.Value > 100)
                 {
-                    _scrollStart.Remove(key);
-
-                    IPlayer player = _sapi.World.PlayerByUid(key);
-
-                    CheckHotbar(player, player.InventoryManager.ActiveHotbarSlotNumber);
+                    keys.Add(kv.Key);
                 }
+            }
+
+            foreach(var k in keys)
+            {
+                _scrollStart.Remove(k);
+
+                IPlayer player = _sapi.World.PlayerByUid(k);
+
+                CheckHotbar(player, player.InventoryManager.ActiveHotbarSlotNumber);
             }
         }
         public EnumHandling Scrolling(IPlayer player, ActiveSlotChangeEventArgs args)
