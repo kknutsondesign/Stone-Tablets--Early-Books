@@ -62,6 +62,7 @@
     "width": 1,
     "height": 2,
     "copyAttributesFrom": "O",
+    "ShowInCreatedBy": false,
     "output": {
       "type": "item",
       "code": "game:book-{blank}",
