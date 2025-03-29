@@ -21,6 +21,18 @@
   "variantgroups": [
     {
       "code": "rock",
+      "states": [
+        "meteorite-iron",
+        "redmarble",
+        "whitemarble",
+        "greenmarble",
+        "halite",
+        "kimberlite",
+        "obsidian",
+        "scoria",
+        "suevite",
+        "tuff"
+      ],
       "loadFromProperties": "block/rock"
     }
 
