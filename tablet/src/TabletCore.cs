@@ -16,16 +16,32 @@ namespace Soggylithe_Tablet
     {
         private ICoreServerAPI _sapi;
         private Dictionary<string, long> _scrollStart = new Dictionary<string, long>();
+        private bool enabled = true;
         public override void Start(ICoreAPI api)
         {
             base.Start(api);
-
             api.Logger.Notification("Loaded tablets.");
         }
 
         public override void StartServerSide(ICoreServerAPI api)
         {
             base.StartServerSide(api);
+
+            switch (api.World.Config.TryGetBool("tabletEnabled"))
+            {
+                case null:
+                    //api.Logger.Log(EnumLogType.Warning, "Null");
+                    api.World.Config.SetBool("tabletEnabled", true);
+                    break;
+                case false:
+                    //api.Logger.Log(EnumLogType.Warning, "False");
+                    enabled = false;
+                    break;
+                case true:
+                    //api.Logger.Log(EnumLogType.Warning, "Null");
+                    break;
+            }
+
             _sapi = api;
             _sapi.Event.BeforeActiveSlotChanged += Scrolling;
             _sapi.Event.RegisterGameTickListener(OnTick, 50);
@@ -35,6 +51,7 @@ namespace Soggylithe_Tablet
 
         private void OnTick(float ms)
         {
+            if (!enabled) { return; }
             long current = _sapi.World.ElapsedMilliseconds;
 
             List<string> keys = new List<string>();
@@ -56,6 +73,7 @@ namespace Soggylithe_Tablet
         }
         public EnumHandling Scrolling(IPlayer player, ActiveSlotChangeEventArgs args)
         {
+            if (!enabled) { return EnumHandling.PassThrough; }
             if (!_scrollStart.ContainsKey(player.PlayerUID))
             {
                 _scrollStart.Add(player.PlayerUID, _sapi.World.ElapsedMilliseconds);
@@ -68,6 +86,7 @@ namespace Soggylithe_Tablet
 
         public void OnJoin(IPlayer player)
         {
+            if (!enabled) { return; }
             player.InventoryManager.GetHotbarInventory().SlotModified += delegate (int slot)
             {
                 CheckHotbar(player, slot);
@@ -105,6 +124,7 @@ namespace Soggylithe_Tablet
 
         public void CheckHotbar(IPlayer player, int slot)
         {
+            if (!enabled) { return; }
             //Active slot was modified
             if (slot == player.InventoryManager.ActiveHotbarSlotNumber)
             {
@@ -170,6 +190,7 @@ namespace Soggylithe_Tablet
 
         private void TakeOutWritingTool(IPlayer player)
         {
+            if (!enabled) { return; }
             ItemSlot hat;
             ItemSlot offhand;
             offhand = player.Entity.LeftHandItemSlot;
@@ -189,6 +210,7 @@ namespace Soggylithe_Tablet
 
         private void PutAwayWritingTool(IPlayer player)
         {
+            if (!enabled) { return; }
             ItemSlot hat;
             ItemSlot offhand;
             offhand = player.Entity.LeftHandItemSlot;
